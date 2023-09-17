@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\WebApi\WebApi.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AutoFixture" />
+      <PackageReference Include="FluentAssertions" />
+      <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+      <PackageReference Include="Swashbuckle.AspNetCore" />
+      <PackageReference Include="Testcontainers.PostgreSql" />
+    </ItemGroup>
+</Project>
