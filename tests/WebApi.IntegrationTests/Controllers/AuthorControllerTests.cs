@@ -8,26 +8,20 @@ using WebApi.Models.Author;
 namespace WebApi.IntegrationTests.Controllers;
 
 [Collection("WebApi")]
-public class AuthorControllerTests
+public class AuthorControllerTests : ControllerTestBase
 {
-    private readonly WebApiFactory _factory;
-    private readonly Fixture _fixture;
-
-    public AuthorControllerTests(WebApiFactory factory)
+    public AuthorControllerTests(WebApiFactory factory) : base(factory)
     {
-        _factory = factory;
-        _fixture = new Fixture();
     }
 
     [Fact]
     public async Task CreateAsync_ShouldCreateNewAuthor()
     {
         // Arrange
-        var client = _factory.CreateClient();
-        var newAuthor = _fixture.Create<NewAuthorDto>();
+        var newAuthor = Fixture.Create<NewAuthorDto>();
         
         // Act
-        var response = await client.PostAsJsonAsync("api/authors", newAuthor);
+        var response = await Client.PostAsJsonAsync("api/authors", newAuthor);
 
         // Assert
         response.Should().NotBeNull();
@@ -37,5 +31,11 @@ public class AuthorControllerTests
         createdAuthor.Should().NotBeNull();
         createdAuthor.Id.Should().NotBeEmpty();
         createdAuthor.Name.Should().Be(newAuthor.Name);
+        
+        // Clean up
+        var dbContext = GetDbContext();
+        var authorFromDb = await dbContext.Authors.FindAsync(createdAuthor.Id);
+        dbContext.Authors.Remove(authorFromDb!);
+        await dbContext.SaveChangesAsync();
     }
 }
